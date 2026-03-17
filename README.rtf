@@ -1,0 +1,100 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 # Breast Cancer Classification using CNN & Grad-CAM\
+\
+## Overview\
+This project develops a deep learning model to classify mammogram images as **benign or malignant** using a Convolutional Neural Network (CNN). The model is designed to support early breast cancer detection by identifying subtle radiographic patterns that may be difficult to detect through traditional analysis alone.\
+\
+To improve interpretability, Grad-CAM is implemented to visualize which regions of each image most strongly influence the model\'92s predictions.\
+\
+## Problem Statement\
+Breast cancer is one of the leading causes of cancer-related death among women worldwide. Early detection through imaging methods such as mammography significantly improves outcomes, but interpretation can be complex\'97especially in patients with dense breast tissue.\
+\
+This project explores how deep learning can assist in diagnostic decision-making by:\
+- Automating image classification\
+- Highlighting clinically relevant regions\
+- Supporting radiologists with additional insights\
+\
+## Dataset\
+- Source: INBreast Full-Field Digital Mammography dataset\
+- Augmented dataset: 7,632 images\
+  - 2,520 benign\
+  - 5,112 malignant\
+- Images resized to **128 \'d7 128 grayscale**\
+- Pixel values normalized to [0,1]\
+\
+## Methodology\
+\
+### Data Preprocessing\
+- Image resizing and normalization\
+- Label encoding and one-hot encoding\
+- Train/validation/test split\
+- Data augmentation:\
+  - Rotation\
+  - Zoom\
+  - Horizontal flipping\
+\
+### Model Architecture\
+- Convolutional Neural Network (CNN)\
+  - 3 convolutional layers (Conv2D)\
+  - MaxPooling layers\
+  - Dense layer (128 units)\
+  - Dropout (0.5) to reduce overfitting\
+- Optimizer: Adam\
+- Loss Function: Categorical Crossentropy\
+\
+### Training Strategy\
+- Batch size: 32\
+- Epochs: up to 50\
+- Early stopping to prevent overfitting\
+- Validation split: 20%\
+\
+### Model Interpretability (Grad-CAM)\
+Grad-CAM is used to generate heatmaps that highlight regions of the image influencing predictions:\
+- Warmer colors = higher importance\
+- Provides transparency into model decision-making\
+- Aligns model focus with clinically relevant features\
+\
+## Results\
+- Achieved **~88\'9692% accuracy** on validation and test datasets\
+- Model successfully distinguishes between benign and malignant images\
+- Grad-CAM visualizations confirm focus on relevant anatomical regions\
+\
+### Ensemble Comparison\
+- CNN used for feature extraction + Random Forest classifier\
+- Achieved **~97% accuracy**, demonstrating strong ensemble performance\
+\
+## Key Insights\
+- CNNs can effectively learn complex visual features without manual feature engineering\
+- Model identifies biologically meaningful patterns:\
+  - Tissue density differences\
+  - Irregular tumor margins\
+  - Structural distortions\
+- Interpretability tools (Grad-CAM) increase trust in model predictions\
+\
+## Limitations\
+- Single-institution dataset (limited generalizability)\
+- No clinical metadata (age, history, etc.)\
+- CC and MLO views treated independently\
+- Limited dataset size despite augmentation\
+\
+## Future Work\
+- Multi-view modeling (combine CC + MLO images)\
+- Incorporate clinical metadata\
+- Apply transfer learning (ResNet, VGG16)\
+- Expand to multi-institution datasets\
+- Evaluate with sensitivity, specificity, ROC-AUC\
+\
+## Tech Stack\
+- Python\
+- TensorFlow / Keras\
+- NumPy, Pandas\
+- Scikit-learn\
+- Matplotlib\
+\
+## Project Structure}
