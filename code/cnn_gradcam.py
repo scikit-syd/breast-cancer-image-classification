@@ -11,16 +11,12 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import EarlyStopping
 
-# -----------------------------
 # PARAMETERS
-# -----------------------------
 image_size = (128, 128)
 batch_size = 32
 epochs = 50
 
-# -----------------------------
 # LOAD DATASET
-# -----------------------------
 data = {"images": [], "labels": []}
 
 data_dirs = [
@@ -48,17 +44,14 @@ for dir_path in data_dirs:
 X = np.array(data["images"], dtype="float32")
 y = np.array(data["labels"])
 
-# -----------------------------
 # ENCODE LABELS
-# -----------------------------
 le = LabelEncoder()
 y_encoded = le.fit_transform(y)
 y_categorical = to_categorical(y_encoded)
 num_classes = y_categorical.shape[1]
 
-# -----------------------------
+
 # TRAIN / VAL / TEST SPLIT
-# -----------------------------
 X_train_full, X_test, y_train_full, y_test = train_test_split(
     X, y_categorical, test_size=0.2, random_state=42, stratify=y
 )
@@ -69,9 +62,8 @@ X_train, X_val, y_train, y_val = train_test_split(
     stratify=np.argmax(y_train_full, axis=1)
 )
 
-# -----------------------------
+
 # DATA AUGMENTATION
-# -----------------------------
 datagen = ImageDataGenerator(
     rotation_range=10,
     width_shift_range=0.05,
@@ -81,9 +73,8 @@ datagen = ImageDataGenerator(
 )
 datagen.fit(X_train)
 
-# -----------------------------
-# BUILD CNN (Functional API) — REQUIRED FOR GRAD-CAM
-# -----------------------------
+
+# BUILD CNN
 inputs = Input(shape=(128, 128, 1))
 
 x = Conv2D(32, (3,3), activation="relu", name="conv_1")(inputs)
@@ -106,9 +97,8 @@ model.summary()
 
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
-# -----------------------------
+
 # TRAINING
-# -----------------------------
 early_stop = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
 history = model.fit(
@@ -118,15 +108,13 @@ history = model.fit(
     callbacks=[early_stop]
 )
 
-# -----------------------------
+
 # EVALUATION
-# -----------------------------
 print("Validation Accuracy:", model.evaluate(X_val, y_val)[1])
 print("Test Accuracy:", model.evaluate(X_test, y_test)[1])
 
-# -----------------------------
+
 # GRAD-CAM FUNCTION
-# -----------------------------
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     last_conv_layer = model.get_layer(last_conv_layer_name)
 
@@ -152,9 +140,8 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
     heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
     return heatmap.numpy()
 
-# -----------------------------
+
 # GENERATE GRAD-CAM ON 1 IMAGE
-# -----------------------------
 example_img = X_test[0]
 example_img_batch = np.expand_dims(example_img, axis=0)
 
@@ -163,9 +150,8 @@ last_conv_name = "conv_3"   # matches model architecture
 
 heatmap = make_gradcam_heatmap(example_img_batch, model, last_conv_name, pred_index=pred_class)
 
-# -----------------------------
+
 # DISPLAY HEATMAP
-# -----------------------------
 pred_label = le.inverse_transform([pred_class])[0]  # get the class name
 
 plt.figure(figsize=(10,4))
