@@ -83,7 +83,7 @@ x = MaxPooling2D((2,2))(x)
 x = Conv2D(64, (3,3), activation="relu", name="conv_2")(x)
 x = MaxPooling2D((2,2))(x)
 
-# 🚨 last conv layer we will use for Grad-CAM
+# LAST CONV LAYER FOR GRAD-CAM
 x = Conv2D(128, (3,3), activation="relu", name="conv_3")(x)
 last_conv_layer = MaxPooling2D((2,2), name="last_maxpool")(x)
 
